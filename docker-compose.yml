@@ -1,0 +1,12 @@
+version: '3.8'
+
+health-info-system-mongo:
+    image: mongo:6
+    container_name: health-info-system-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - health-info-system-data:/data/db
+
+volumes:
+  health-info-system-data:
