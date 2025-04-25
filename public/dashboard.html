@@ -1,338 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Information Management System - Dashboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Health Information Management System - dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            padding-top: 152px; /* Space for fixed header */
-            overflow: hidden; /* Hide scroll bar from the main page */
-        }
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-        h1 {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 20px;
-            background-color: #2c3e50;
-            color: white;
-            text-align: center;
-            z-index: 1000;
-        }
+    h1 {
+      text-align: center;
+      background-color: #1d293d;
+      color: white;
+      height: 100px;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .container {
-            display: flex;
-            min-height: calc(100vh - 152px);
-            overflow: auto; /* Allow scroll */
-        }
+    main {
+      display: flex;
+      flex-direction: row;
+    }
 
-        nav {
-            position: fixed;
-            top: 72px; /* Below header */
-            left: 0;
-            bottom: 0;
-            width: 220px;
-            background-color: #34495e;
-            color: white;
-            padding: 20px 0;
-            overflow-y: auto;
-            z-index: 900;
-        }
+    .left-contents {
+      background-color: #1d293d;
+      position: fixed;
+      top: 100px;
+      bottom: 0;
+      left: 0;
+      width: 250px;
+      color: white;
+      font-size: 16px;
+    }
 
-        nav ul {
-            list-style-type: none;
-        }
+    .left-contents nav ul {
+      margin: 0;
+      padding: 0;
+    }
 
-        nav li {
-            padding: 12px 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+    .left-contents nav ul li {
+      list-style: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: block;
+      width: 100%;
+    }
 
-        nav li:hover {
-            background-color: #2c3e50;
-        }
+    .left-contents nav ul li:hover {
+      background-color: #2c3e50;
+    }
 
-        nav li.active {
-            background-color: #3498db;
-        }
+    .left-contents nav ul li.active {
+      background-color: #34495e;
+    }
 
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            margin-left: 220px; /* Account for fixed nav */
-            overflow: auto;
-            margin-top: 20px; /* Add margin to avoid header overlap */
-        }
+    .right-contents {
+      margin-left: 250px;
+      padding: 20px;
+      width: 100%;
+    }
 
-        .fixed-section {
-            position: sticky;
-            top: 152px; /* Below header */
-            background-color: white;
-            z-index: 800;
-            padding-top: 20px;
-            margin-bottom: 20px; /* Add margin to separate from scrollable content */
-        }
+    .button-search-area {
+      padding: 30px;
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+      position: fixed;
+      top: 130px;
+      left: 280px;
+      right: 30px;
+      background-color: white;
+    }
 
-        .scrollable-section {
-            max-height: calc(100vh - 280px); /* Account for fixed elements */
-            overflow-y: auto;
-        }
+    .button-search-area > div {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+    }
 
-        .left-section {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+    .button-search-area > div > button {
+      height: 50px;
+      border-radius: 4px;
+      font-size: 16px;
+      background-color: #2980b9;
+      border: none;
+      color: white;
+      padding: 0 10px;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
 
-        .card {
-            background-color: #f8f9fa;
-            border-radius: 6px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+    .button-search-area > div > button:hover {
+      opacity: 0.75;
+    }
 
-        .card h3 {
-            margin-bottom: 15px;
-            color: #2c3e50;
-            font-size: 1.2rem;
-        }
+    .button-search-area > form {
+      height: 50px;
+      width: 100%;
+    }
 
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
+    .button-search-area > form > input {
+      width: 100%;
+      height: 100%;
+      font-size: 16px;
+      text-indent: 10px;
+    }
 
-        .action-btn {
-            padding: 10px 16px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-            white-space: nowrap;
-        }
+    .button-search-area > form > input::placeholder {
+      font-size: 16px;
+    }
 
-        .action-btn:hover {
-            background-color: #2980b9;
-            transform: translateY(-1px);
-        }
+    .all-patients-area {
+      margin-top: 200px;
+    }
 
-        .search-bar {
-            margin-top: 15px;
-            width: 100%;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .patients {
-            list-style: none;
-            padding: 0;
-        }
-
-        .patient-item {
-            padding: 14px 0;
-            border-bottom: 1px solid #e0e0e0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .patient-item:last-child {
-            border-bottom: none;
-        }
-
-        .patient-name {
-            font-weight: 500;
-            color: #2c3e50;
-        }
-
-        .last-visit {
-            color: #7f8c8d;
-            font-size: 0.9em;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding-top: 132px;
-            }
-
-            .container {
-                flex-direction: column;
-            }
-
-            nav {
-                position: static;
-                width: 100%;
-                padding: 10px 0;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .fixed-section {
-                position: static;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .action-btn {
-                width: 100%;
-            }
-
-            .patient-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 4px;
-            }
-        }
-    </style>
+  </style>
 </head>
 <body>
-    <h1>Health Information Management System</h1>
-    <div class="container">
-        <nav>
-            <ul>
-                <li class="active">Dashboard</li>
-                <li id="program-btn">Programs</li>
-                <li>Logout</li>
-            </ul>
-        </nav>
-        
-        <div class="main-content">
-            <section class="left-section">
-                <div class="fixed-section">
-                    <div class="card quick-actions">
-                        <h3>Quick Actions</h3>
-                        <div class="action-buttons">
-                            <button class="action-btn">Register New Patient</button>
-                            <button class="action-btn">Create New Program</button>
-                            <button class="action-btn">Enroll Patient to Program</button>
-                        </div>
-                        <div class="search-bar">
-                            <input type="text" placeholder="Search for a client...">
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3>All Patients</h3>
-                    </div>
-                </div>
-                
-                <div class="scrollable-section">
-                    <div class="card patient-list">
-                        <ul class="patients">
-                            <li class="patient-item">
-                                <span class="patient-name">Patient 1</span>
-                                <span class="last-visit">Last visit: 2023-05-15</span>
-                            </li>
-                            <li class="patient-item">
-                                <span class="patient-name">Patient 2</span>
-                                <span class="last-visit">Last visit: 2023-05-14</span>
-                            </li>
-                            <li class="patient-item">
-                                <span class="patient-name">Patient 3</span>
-                                <span class="last-visit">Last visit: 2023-05-13</span>
-                            </li>
-                            <li class="patient-item">
-                                <span class="patient-name">Patient 4</span>
-                                <span class="last-visit">Last visit: 2023-05-12</span>
-                            </li>
-                            <li class="patient-item">
-                                <span class="patient-name">Patient 5</span>
-                                <span class="last-visit">Last visit: 2023-05-10</span>
-                            </li>
-                            <li class="patient-item">
-                                <span class="patient-name">Patient 6</span>
-                                <span class="last-visit">Last visit: 2023-05-09</span>
-                            </li>
-                            <li class="patient-item">
-                                <span class="patient-name">Patient 7</span>
-                                <span class="last-visit">Last visit: 2023-05-08</span>
-                            </li>
-                            <li class="patient-item">
-                                <span class="patient-name">Patient 8</span>
-                                <span class="last-visit">Last visit: 2023-05-07</span>
-                            </li>
-                            <li class="patient-item">
-                                <span class="patient-name">Patient 9</span>
-                                <span class="last-visit">Last visit: 2023-05-06</span>
-                            </li>
-                            <li class="patient-item">
-                                <span class="patient-name">Patient 10</span>
-                                <span class="last-visit">Last visit: 2023-05-05</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
+  <h1>Health Information Management System</h1>
+  <main>
+    <section class="left-contents">
+      <nav>
+        <ul>
+          <li id="program-btn" class="active">Programs</li>
+          <li>Logout</li>
+        </ul>
+      </nav>
+    </section>
+    <section class="right-contents">
+      <div class="button-search-area">
+        <div>
+          <button class="action-btn">Register New Patient</button>
+          <button class="action-btn">Create New Program</button>
+          <button class="action-btn">Enroll Patient To Program</button>
         </div>
-    </div>
-    
-    <script>
+        <form>
+          <input type="text" placeholder="Search for a client..." />
+        </form>
+      </div>
+      <div class="all-patients-area">
+        <div>
+          <h2>All Patients</h2>
+        </div>
+        <div>
+          List of patients
+        </div>
+      </div>
+    </section>
+  </main>
+  <script>
+    document.querySelectorAll('.action-btn')[0].addEventListener('click', function () {
+      window.open('register_patient.html', '_blank');
+    });
 
-        // Register New Patient
-        document.querySelectorAll('.action-btn')[0].addEventListener('click', function() {
-    window.open('register_patient.html', '_blank'); // Open in a new tab
-});
+    document.querySelectorAll('.action-btn')[1].addEventListener('click', function () {
+      window.open('create_program.html', '_blank');
+    });
 
-        // Create New Program
-       document.querySelectorAll('.action-btn')[1].addEventListener('click', function() {
-    window.open('create_program.html', '_blank');
-});
+    document.querySelectorAll('.action-btn')[2].addEventListener('click', function () {
+      window.open('enroll_patient.html', '_blank');
+    });
 
-        // Enroll Patient to Program
-       document.querySelectorAll('.action-btn')[2].addEventListener('click', function() {
-    window.open('enroll_patient.html', '_blank'); // Open in a new tab
-});
+    document.getElementById('program-btn').addEventListener('click', ()=>{
+        window.open('all-programs.html', '_blank');
+    })
 
-document.getElementById('program-btn').addEventListener('click', function (){
-    window.open('all-programs.html', '_blank')
-})
-
-        // Navigation functionality
-        document.querySelectorAll('nav li').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('nav li').forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
-                console.log('Navigating to:', this.textContent);
-            });
-        });
-
-
-        // Search functionality
-        const searchInput = document.querySelector('.search-bar input');
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            document.querySelectorAll('.patient-item').forEach(item => {
-                const name = item.querySelector('.patient-name').textContent.toLowerCase();
-                item.style.display = name.includes(searchTerm) ? 'flex' : 'none';
-            });
-        });
-
-    </script>
+    // Navigation functionality
+    document.querySelectorAll('nav li').forEach(item => {
+      item.addEventListener('click', function () {
+        document.querySelectorAll('nav li').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>

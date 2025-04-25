@@ -7,6 +7,7 @@ import { enrollClientToProgram } from "../controllers/enrollClientToProgram";
 import { getAllClients } from "../controllers/getAllClients";
 import { getClientProfile } from "../controllers/getClientProfile";
 import { searchForClient } from "../controllers/searchForClient";
+import { getAllPrograms } from "../controllers/getAllPrograms";
 
 const router = Router()
 
@@ -78,6 +79,16 @@ router.get(
   (req: Request, res: Response) => {
     (async () => {
       await getClientProfile(req, res)
+    })();
+  }
+);
+
+router.get(
+  "/programs",
+  authenticateToken,
+  (req: Request, res: Response) => {
+    (async () => {
+      await getAllPrograms(req, res);
     })();
   }
 );

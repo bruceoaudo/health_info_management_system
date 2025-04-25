@@ -1,8 +1,8 @@
 import mongoose, { Schema, model, Document, Types } from "mongoose";
 
 export enum Gender {
-  M = "M",
-  F = "F",
+  Male = "Male",
+  Female = "Female",
 }
 
 interface Address {
@@ -27,10 +27,10 @@ export interface IClient extends Document {
 
 const addressSchema = new Schema<Address>(
   {
-    country: { type: String, required: true },
-    county: { type: String, required: true },
-    city: { type: String, required: true },
-    postal_code: { type: String, required: true },
+    country: { type: String, required: false },
+    county: { type: String, required: false },
+    city: { type: String, required: false },
+    postal_code: { type: String, required: false },
   },
   { _id: false } // Prevents separate _id for subdocument
 );

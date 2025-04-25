@@ -29,8 +29,13 @@ export const login = async (req: Request, res: Response) => {
     // Send token as HttpOnly cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: process.env.NODE_ENV === "production", // true in production
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+      domain:
+        process.env.NODE_ENV === "development"
+          ? "localhost"
+          : ".yourdomain.com",
     });
 
     return res.status(200).json({ message: "Login successful" });

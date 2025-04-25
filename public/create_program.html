@@ -1,136 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Information Management System - Create program</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f5f7fa;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Health Information Management System - Create Program</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 0;
+    }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    h1 {
+      text-align: center;
+      padding: 30px 0;
+      background-color: #1d293d;
+      color: white;
+      margin: 0;
+    }
 
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+    .form-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
 
-        .form-container input, .form-container select, .form-container textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
+    .form-container input,
+    .form-container select,
+    .form-container textarea {
+      width: 100%;
+      height: 50px;
+      margin: 12px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+      text-indent: 10px;
+    }
 
-        .form-container button {
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-        }
+    .form-container input:focus,
+    .form-container select:focus,
+    .form-container textarea:focus {
+      border-color: #2980b9;
+      outline: none;
+    }
 
-        .form-container button:hover {
-            background-color: #2980b9;
-        }
+    .form-container button {
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 14px;
+      margin-top: 10px;
+      width: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
-        .error-message {
-            color: red;
-            text-align: center;
-        }
+    .form-container button:hover {
+      background-color: #1d6fa5;
+    }
 
-        .success-message {
-            color: green;
-            text-align: center;
-        }
-    </style>
+       .error, .success {
+        height: 50px;
+        width: 230px;
+        font-size: 16px;
+        position: absolute;
+        top: 290px;
+        left: 18px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 20px;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        pointer-events: none;
+      }
+
+      .error {
+        background-color: #ffebee;
+        color: #d32f2f;
+        border: 1px solid #ef9a9a;
+      }
+
+      .success {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        border: 1px solid #a5d6a7;
+      }
+
+      .error.show, .success.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+  </style>
 </head>
 <body>
-    <h1>Create New Program</h1>
+  <div id="errorMessage" class="error"></div>
+    <div id="successMessage" class="success"></div>
+  <h1>Create New Program</h1>
 
-    <div class="form-container">
-        <form id="createProgramForm">
-            <input type="text" id="name" placeholder="Program Name" required />
-            <textarea id="description" placeholder="Program Description" required></textarea>
-            <select id="program_type" required>
-                <option value="">Select Program Type</option>
-                <option value="Research">Research</option>
-                <option value="Treatment">Treatment</option>
-                <option value="Education">Education</option>
-            </select>
-            <input type="text" id="target_disease" placeholder="Target Disease" required />
-            <input type="date" id="start_date" required />
-            <input type="date" id="end_date" required />
-            <input type="number" id="max_capacity" placeholder="Max Capacity" required />
-            <button type="submit">Create Program</button>
-        </form>
+  <div class="form-container">
+    <form id="createProgramForm">
+      <input type="text" id="name" placeholder="Program Name" required />
+      <textarea id="description" placeholder="Program Description" required></textarea>
+      <select id="program_type" required>
+        <option value="">Select Program Type</option>
+        <option value="Research">Research</option>
+        <option value="Treatment">Treatment</option>
+        <option value="Education">Education</option>
+      </select>
+      <input type="text" id="target_disease" placeholder="Target Disease" required />
+      <input type="date" id="start_date" required />
+      <input type="date" id="end_date" required />
+      <input type="number" id="max_capacity" placeholder="Max Capacity" required />
+      <button type="submit">Create Program</button>
+    </form>
 
-        <div id="error-message" class="error-message"></div>
-        <div id="success-message" class="success-message"></div>
-    </div>
+  </div>
 
-    <script>
-        document.getElementById('createProgramForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+  <script>
 
-            const name = document.getElementById('name').value;
-            const description = document.getElementById('description').value;
-            const program_type = document.getElementById('program_type').value;
-            const target_disease = document.getElementById('target_disease').value;
-            const start_date = document.getElementById('start_date').value;
-            const end_date = document.getElementById('end_date').value;
-            const max_capacity = document.getElementById('max_capacity').value;
+    const createProgramForm = document.getElementById('createProgramForm');
+      const errorMessage = document.getElementById('errorMessage');
+      const successMessage = document.getElementById('successMessage');
 
-            // Clear previous messages
-            document.getElementById('error-message').textContent = '';
-            document.getElementById('success-message').textContent = '';
+      function showMessage(element, message) {
+        element.textContent = message;
+        element.classList.add('show');
+        
+        // Clear any existing timeout to avoid hiding prematurely
+        if (window.messageTimeout) {
+          clearTimeout(window.messageTimeout);
+        }
+        
+        // Hide after 5 seconds
+        window.messageTimeout = setTimeout(() => {
+          element.classList.remove('show');
+        }, 5000);
+      }
 
-            // Send the data to the backend
-            try {
-                const response = await fetch('/api/create-program', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        name,
-                        description,
-                        program_type,
-                        target_disease,
-                        start_date,
-                        end_date,
-                        max_capacity,
-                    }),
-                });
 
-                const result = await response.json();
+    createProgramForm.addEventListener('submit', async function(event) {
+      event.preventDefault();
 
-                if (response.ok) {
-                    document.getElementById('success-message').textContent = result.message;
-                } else {
-                    document.getElementById('error-message').textContent = result.message;
-                }
-            } catch (error) {
-                console.error("Error during program creation:", error);
-                document.getElementById('error-message').textContent = 'An error occurred. Please try again later.';
-            }
+      const name = document.getElementById('name').value;
+      const description = document.getElementById('description').value;
+      const program_type = document.getElementById('program_type').value;
+      const target_disease = document.getElementById('target_disease').value;
+      const start_date = document.getElementById('start_date').value;
+      const end_date = document.getElementById('end_date').value;
+      const max_capacity = document.getElementById('max_capacity').value;
+
+
+      try {
+        const response = await fetch('http://localhost:5000/api/v1/create-program', {
+          method: 'POST',
+          credentials: 'include',
+          body: JSON.stringify({
+            name,
+            description,
+            program_type,
+            target_disease,
+            start_date,
+            end_date,
+            max_capacity,
+          }),
         });
-    </script>
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to create new program');
+        }
+        
+        // Program creation successful
+          showMessage(successMessage, data.message || 'Program created successfully');
+          createProgramForm.reset();
+      } catch (error) {
+        showMessage(errorMessage, error.message);
+      }
+    });
+  </script>
 </body>
 </html>

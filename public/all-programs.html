@@ -77,44 +77,48 @@
 
     <script>
         // Fetch the list of programs from the backend and display them
-        window.onload = async () => {
-            try {
-                // Fetch the programs from the server
-                const response = await fetch('/api/programs');
-                const programs = await response.json();
-                const programListElement = document.getElementById('programList');
+       window.onload = async () => {
+    try {
+        const response = await fetch('http://localhost:5000/api/v1/programs', {
+            method: 'GET',
+            credentials: 'include'
+        });
 
-                // Check if there are programs
-                if (programs.length === 0) {
-                    programListElement.innerHTML = '<li>No programs available.</li>';
-                    return;
-                }
-
-                // Loop through the programs and create a list item for each
-                programs.forEach(program => {
-                    const listItem = document.createElement('li');
-                    listItem.innerHTML = `
-                        <h3>${program.name}</h3>
-                        <p><strong>Description:</strong> ${program.description}</p>
-                        <p><strong>Target Disease:</strong> ${program.target_disease}</p>
-                        <p><strong>Start Date:</strong> ${new Date(program.start_date).toLocaleDateString()}</p>
-                        <p><strong>End Date:</strong> ${new Date(program.end_date).toLocaleDateString()}</p>
-                        <p><strong>Max Capacity:</strong> ${program.max_capacity}</p>
-                        <button onclick="viewProgramDetails('${program._id}')">View Details</button>
-                    `;
-                    programListElement.appendChild(listItem);
-                });
-
-            } catch (error) {
-                console.error('Error fetching programs:', error);
-                document.getElementById('programList').innerHTML = '<li>Error fetching programs. Please try again later.</li>';
-            }
-        };
-
-        // Function to view program details (e.g., redirect to a detailed page or show more info)
-        function viewProgramDetails(programId) {
-            window.location.href = `/programs/${programId}`;
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to fetch programs');
         }
+
+        const data = await response.json();
+        const programs = data.programs || []; // Access the clients array
+        const programListElement = document.getElementById('programList');
+
+        if (programs.length === 0) {
+            programListElement.innerHTML = '<li>No programs available.</li>';
+            return;
+        }
+
+        programs.forEach(program => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <h3>${program.name}</h3>
+                <p><strong>Type:</strong> ${program.program_type}</p>
+                <p><strong>Description:</strong> ${program.description}</p>
+                <p><strong>Target Disease:</strong> ${program.target_disease}</p>
+                <p><strong>Start Date:</strong> ${program.start_date ? new Date(program.start_date).toLocaleDateString() : 'N/A'}</p>
+                <p><strong>End Date:</strong> ${program.end_date ? new Date(program.end_date).toLocaleDateString() : 'N/A'}</p>
+                <p><strong>Max Capacity:</strong> ${program.max_capacity}</p>
+            `;
+            programListElement.appendChild(listItem);
+        });
+
+    } catch (error) {
+        console.error('Error fetching programs:', error);
+        document.getElementById('programList').innerHTML = `
+            <li>Error: ${error.message}</li>
+        `;
+    }
+};
     </script>
 </body>
 </html>

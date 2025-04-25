@@ -17,7 +17,7 @@ export const authenticateToken = (
   const token = req.cookies?.token;
 
   if (!token) {
-    res.status(401).json({ message: "Authentication token missing" });
+    res.status(401).json({ message: "Login again to proceed" });
     return;
   }
 
