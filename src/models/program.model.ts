@@ -1,4 +1,4 @@
-import { Schema, model, Document, Types } from "mongoose";
+import mongoose, { Schema, model, Document, Types } from "mongoose";
 
 export enum ProgramType {
   EDUCATION = "Education",
@@ -15,7 +15,7 @@ export interface IProgram extends Document {
   end_date: Date;
   max_capacity: number;
   enrolled_clients: Types.ObjectId[];
-  program_manager: string;
+  program_manager: Types.ObjectId
   createdAt: Date;
   updatedAt: Date;
 }
@@ -62,9 +62,9 @@ const programSchema = new Schema<IProgram>(
       },
     ],
     program_manager: {
-      type: String,
-      required: [true, "Program manager is required"],
-      trim: true,
+      type: Schema.Types.ObjectId,
+      ref: 'Doctor',
+      required: true,
     },
   },
   {
@@ -72,4 +72,7 @@ const programSchema = new Schema<IProgram>(
   }
 );
 
-export const Program = model<IProgram>("Program", programSchema);
+export const Program = model<IProgram>(
+  "Program",
+  programSchema
+);

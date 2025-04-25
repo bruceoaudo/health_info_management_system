@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
- "scripts": {
-  "start": "node dist/server.js",
-  "dev": "nodemon --watch src --exec ts-node src/server.ts",
-  "build": "tsc"
-},
+  "scripts": {
+    "start": "node dist/server.js",
+    "dev": "nodemon --watch src --exec ts-node src/server.ts",
+    "build": "tsc"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bruceoaudo/health_info_management_system.git"
@@ -20,12 +20,16 @@
   },
   "homepage": "https://github.com/bruceoaudo/health_info_management_system#readme",
   "dependencies": {
+    "@faker-js/faker": "^9.7.0",
+    "argon2": "^0.43.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^22.14.1",
     "nodemon": "^3.1.10",

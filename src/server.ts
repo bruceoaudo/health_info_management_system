@@ -1,13 +1,17 @@
 import mongoose from "mongoose";
 import app from "./app";
+import { createFakeDoctor } from "./utils/createFakeDoctor";
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI_DEV = process.env.MONGO_URI_DEV || "";
 
 mongoose
   .connect(MONGO_URI_DEV)
-  .then(() => {
+  .then(async () => {
     console.log("MongoDB connected");
+
+    await createFakeDoctor();
+    
     const server = app.listen(PORT, () =>
       console.log(`Server running on port ${PORT}`)
     );

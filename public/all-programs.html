@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Information Management System - All programs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .program-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .program-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .program-list li {
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 10px 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .program-list h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .program-list p {
+            margin: 5px 0;
+        }
+
+        .program-list button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .program-list button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>All Programs</h1>
+
+    <div class="program-container">
+        <ul class="program-list" id="programList">
+            <!-- Programs will be populated here -->
+        </ul>
+    </div>
+
+    <script>
+        // Fetch the list of programs from the backend and display them
+        window.onload = async () => {
+            try {
+                // Fetch the programs from the server
+                const response = await fetch('/api/programs');
+                const programs = await response.json();
+                const programListElement = document.getElementById('programList');
+
+                // Check if there are programs
+                if (programs.length === 0) {
+                    programListElement.innerHTML = '<li>No programs available.</li>';
+                    return;
+                }
+
+                // Loop through the programs and create a list item for each
+                programs.forEach(program => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <h3>${program.name}</h3>
+                        <p><strong>Description:</strong> ${program.description}</p>
+                        <p><strong>Target Disease:</strong> ${program.target_disease}</p>
+                        <p><strong>Start Date:</strong> ${new Date(program.start_date).toLocaleDateString()}</p>
+                        <p><strong>End Date:</strong> ${new Date(program.end_date).toLocaleDateString()}</p>
+                        <p><strong>Max Capacity:</strong> ${program.max_capacity}</p>
+                        <button onclick="viewProgramDetails('${program._id}')">View Details</button>
+                    `;
+                    programListElement.appendChild(listItem);
+                });
+
+            } catch (error) {
+                console.error('Error fetching programs:', error);
+                document.getElementById('programList').innerHTML = '<li>Error fetching programs. Please try again later.</li>';
+            }
+        };
+
+        // Function to view program details (e.g., redirect to a detailed page or show more info)
+        function viewProgramDetails(programId) {
+            window.location.href = `/programs/${programId}`;
+        }
+    </script>
+</body>
+</html>

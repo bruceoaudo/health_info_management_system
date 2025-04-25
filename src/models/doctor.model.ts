@@ -1,6 +1,6 @@
-import mongoose, { Schema, model, Document, Types } from "mongoose";
+import { Schema, model, Document } from "mongoose";
 
-export enum Gender {
+enum Gender {
   M = "M",
   F = "F",
 }
@@ -12,15 +12,17 @@ interface Address {
   postal_code: string;
 }
 
-export interface IClient extends Document {
+export interface IDoctor extends Document {
   fullName: string;
   date_of_birth: Date;
   gender: Gender;
-  id_number: string;
-  physical_address: Address;
+  license_number: string;
+  specialty: string;
+  years_of_experience: number;
   phone: string;
   email: string;
-  selected_programs: Types.ObjectId[];
+  password: string;
+  office_address: Address;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -32,10 +34,10 @@ const addressSchema = new Schema<Address>(
     city: { type: String, required: true },
     postal_code: { type: String, required: true },
   },
-  { _id: false } // Prevents separate _id for subdocument
+  { _id: false }
 );
 
-const clientSchema = new Schema<IClient>(
+const doctorSchema = new Schema<IDoctor>(
   {
     fullName: {
       type: String,
@@ -54,45 +56,43 @@ const clientSchema = new Schema<IClient>(
       trim: true,
       lowercase: true,
     },
+    password: {
+      type: String,
+      reuired: [true, "Password is required"],
+      trim: true
+    },
     date_of_birth: {
       type: Date,
-      required: [true, "DOB is required"],
+      required: [true, "Date of birth is required"],
     },
     gender: {
       type: String,
       enum: Object.values(Gender),
       required: [true, "Gender is required"],
     },
-    id_number: {
+    license_number: {
       type: String,
-      required: [true, "ID number is required"],
+      required: [true, "Medical license number is required"],
       trim: true,
     },
-    physical_address: {
+    specialty: {
+      type: String,
+      required: [true, "Specialty is required"],
+      trim: true,
+    },
+    years_of_experience: {
+      type: Number,
+      required: [true, "Years of experience is required"],
+      min: [0, "Experience must be 0 or more"],
+    },
+    office_address: {
       type: addressSchema,
       required: true,
-      default: {
-        country: "",
-        county: "",
-        city: "",
-        postal_code: "",
-      },
     },
-
-    selected_programs: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Program",
-        default: [],
-      },
-    ],
   },
   {
     timestamps: true,
   }
 );
 
-export const Client = model<IClient>(
-  "Client",
-  clientSchema
-);
+export const Doctor = model<IDoctor>("Doctor", doctorSchema);

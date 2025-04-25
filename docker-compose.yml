@@ -1,6 +1,7 @@
 version: '3.8'
 
-health-info-system-mongo:
+services:
+  health-info-system-mongo:
     image: mongo:6
     container_name: health-info-system-mongo
     ports:

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Health Information Management System - Login</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        justify-content: center;
+        text-align: center;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        height: 30px;
+      }
+
+      input::placeholder{
+        font-size: 16px;
+      }
+
+      input[type="submit"] {
+        background-color: #2980b9;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      input[type="submit"]:hover {
+        opacity: .75;
+      }
+
+      .error {
+        color: red;
+        margin-top: 10px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <h1>Login</h1>
+    <form id="loginForm">
+      <input id="emailInput" type="email" placeholder="Work email" required />
+      <input id="passwordInput" type="password" placeholder="Password" required />
+      <input type="submit" value="Login" />
+      <div id="errorMessage" class="error"></div>
+    </form>
+
+    <script>
+      const loginForm = document.getElementById('loginForm');
+      const errorMessage = document.getElementById('errorMessage');
+
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('emailInput').value;
+        const password = document.getElementById('passwordInput').value;
+
+        try {
+          const response = await fetch('http://localhost:5000/api/v1/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password
+            }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || 'Login failed');
+          }
+
+          // Login successful - redirect to dashboard or home page
+          window.location.href = '/dashboard.html';
+          
+        } catch (error) {
+          errorMessage.textContent = error.message;
+          console.error('Login error:', error);
+        }
+      });
+    </script>
+  </body>
+</html>
