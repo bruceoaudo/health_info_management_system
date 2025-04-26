@@ -4,9 +4,10 @@ import { createFakeDoctor } from "./utils/createFakeDoctor";
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI_DEV = process.env.MONGO_URI_DEV || "";
+const MONGO_URI_PROD = process.env.MONGO_URI_PROD || "";
 
 mongoose
-  .connect(MONGO_URI_DEV)
+  .connect(process.env.NODE_ENV == "developement" ? MONGO_URI_DEV : MONGO_URI_PROD)
   .then(async () => {
     console.log("MongoDB connected");
 

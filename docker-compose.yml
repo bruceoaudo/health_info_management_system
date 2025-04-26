@@ -1,13 +1,33 @@
 version: '3.8'
 
 services:
-  health-info-system-mongo:
+  app:
+    build: .
+    container_name: health-info-system-app
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - mongo
+    profiles:
+      - app
+    environment:
+      - PORT=${PORT}
+      - MONGO_URI_DEV=${MONGO_URI_DEV}
+      - MONGO_URI_PROD=${MONGO_URI_PROD}
+      - JWT_SECRET=${JWT_SECRET}
+      - NODE_ENV=${NODE_ENV}
+      - DB_NAME=${DB_NAME}
+      - MONGO_DB_PORT=${MONGO_DB_PORT}
+
+  mongo:
     image: mongo:6
     container_name: health-info-system-mongo
     ports:
-      - "27017:27017"
+      - "${MONGO_DB_PORT}:${MONGO_DB_PORT}"
     volumes:
-      - health-info-system-data:/data/db
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=${DB_NAME}
 
 volumes:
-  health-info-system-data:
+  mongo-data:
