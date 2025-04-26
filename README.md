@@ -23,8 +23,8 @@ A comprehensive system for managing patient health records, programs, and extern
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-repo/hims.git
-   cd hims
+   git clone https://github.com/bruceoaudo/health_info_management_system.git
+   cd health_info_management_system
    ```
 2. **Install dependencies**
     ```bash
