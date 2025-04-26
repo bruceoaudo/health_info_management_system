@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - Health Information Management System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+        }
+        h1 {
+            text-align: center;
+            background-color: #1d293d;
+            color: white;
+            height: 100px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .search-results-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .patient-list {
+            list-style: none;
+            padding: 0;
+        }
+        .patient-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 10px 0;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .patient-name {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+        .patient-details {
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #333;
+        }
+        .view-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        .view-btn:hover {
+            background-color: #2980b9;
+        }
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 18px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search Results</h1>
+    <div id="search-results-container">
+        <div class="loading">Loading search results...</div>
+    </div>
+
+    <script>
+        function getUrlParameter(name) {
+            name = name.replace(/[\[\]]/g, '\\$&');
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            const results = regex.exec(window.location.href);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        async function fetchSearchResults() {
+    const searchQuery = getUrlParameter('query');
+    const container = document.getElementById('search-results-container');
+    
+    if (!searchQuery) {
+        container.innerHTML = '<p>No search query provided.</p>';
+        return;
+    }
+
+    try {
+        // Add error logging for the request URL
+        console.log('Making request to:', `http://localhost:5000/api/v1/search-for-client?name=${encodeURIComponent(searchQuery)}`);
+        
+        const response = await fetch(`http://localhost:5000/api/v1/search-for-client?name=${encodeURIComponent(searchQuery)}`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        // Log the raw response for debugging
+        const responseText = await response.text();
+        console.log('Raw response:', responseText);
+        
+        if (!response.ok) {
+            // Try to parse error message
+            let errorMsg = 'Failed to fetch search results';
+            try {
+                const errorData = JSON.parse(responseText);
+                errorMsg = errorData.message || errorMsg;
+            } catch (e) {}
+            throw new Error(errorMsg);
+        }
+
+        const data = JSON.parse(responseText);
+        console.log('Parsed data:', data);
+        
+        // Updated to match new response format
+        const patients = data.clients || [];
+        
+        if (patients.length === 0) {
+            container.innerHTML = `<p>No patients found matching "${searchQuery}"</p>`;
+            return;
+        }
+
+        const patientList = document.createElement('ul');
+        patientList.className = 'patient-list';
+
+        patients.forEach(patient => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <div class="patient-card">
+                    <div class="patient-info">
+                        <h3 class="patient-name">${patient.fullName}</h3>
+                        <div class="patient-details">
+                            <p><span class="detail-label">ID:</span> ${patient.id_number}</p>
+                            <p><span class="detail-label">Phone:</span> ${patient.phone}</p>
+                            <p><span class="detail-label">Email:</span> ${patient.email}</p>
+                        </div>
+                    </div>
+                    <button class="view-btn" onclick="viewPatientDetails('${patient._id}')">View Details</button>
+                </div>
+            `;
+            patientList.appendChild(listItem);
+        });
+
+        container.innerHTML = '';
+        container.appendChild(patientList);
+
+    } catch (error) {
+        console.error('Error fetching search results:', error);
+        container.innerHTML = `
+            <div class="error-message">
+                <p>Error loading search results.</p>
+                <p>${error.message}</p>
+                <p>Please check console for details.</p>
+            </div>
+        `;
+    }
+}
+
+        function viewPatientDetails(patientId) {
+            window.open(`patient-details.html?id=${patientId}`, '_blank');
+        }
+
+        window.onload = fetchSearchResults;
+    </script>
+</body>
+</html>

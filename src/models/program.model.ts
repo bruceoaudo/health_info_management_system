@@ -7,6 +7,7 @@ export enum ProgramType {
 }
 
 export interface IProgram extends Document {
+  _id: Types.ObjectId
   name: string;
   description: string;
   program_type: ProgramType;

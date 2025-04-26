@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Information Management System - Enroll patient</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0px;
-            padding: 0px;
-            background-color: #f5f7fa;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Health Information Management System - Enroll patient</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0px;
+      padding: 0px;
+      background-color: #f5f7fa;
+      position: relative;
+    }
 
-          h1 {
+    h1 {
       text-align: center;
       padding: 30px 0;
       background-color: #1d293d;
@@ -20,148 +21,187 @@
       margin: 0;
     }
 
-        .form-container {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+    .form-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .form-container input, .form-container select {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-            height: 50px;
-            font-size: 1rem;
-        }
+    .form-container input, .form-container select {
+      width: 100%;
+      text-indent: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      height: 50px;
+    }
 
-        .form-container button {
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-            height: 50px;
-            font-size: 1rem;
-        }
+    .form-container button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+      height: 50px;
+      font-size: 1rem;
+    }
 
-        .form-container button:hover {
-            background-color: #2980b9;
-        }
+    .form-container button:hover {
+      background-color: #2980b9;
+    }
 
-        .error-message {
-            color: red;
-            text-align: center;
-        }
+    .error, .success {
+      height: 50px;
+      width: 230px;
+      font-size: 16px;
+      position: absolute;
+      top: 530px;
+      left: 18px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
 
-        .success-message {
-            color: green;
-            text-align: center;
-        }
-    </style>
+    .error {
+      background-color: #ffebee;
+      color: #d32f2f;
+      border: 1px solid #ef9a9a;
+    }
+
+    .success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #a5d6a7;
+    }
+
+    .error.show, .success.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
 </head>
 <body>
-    <h1>Enroll Patient</h1>
+  <div id="errorMessage" class="error"></div>
+  <div id="successMessage" class="success"></div>
 
-    <div class="form-container">
-        <form id="enrollPatientForm">
-            <select id="clientId" required>
-                <option value="">Select Client</option>
-                <!-- Populate with client options dynamically -->
-            </select>
+  <h1>Enroll Patient</h1>
 
-            <select id="programId" required>
-                <option value="">Select Program</option>
-                <!-- Populate with program options dynamically -->
-            </select>
+  <div class="form-container">
+    <form id="enrollPatientForm">
+      <input type="text" id="programName" placeholder="Program Name" required />
 
-            <button type="submit">Enroll Client</button>
-        </form>
+      <input type="text" id="fullName" placeholder="Full Name" />
+      <input type="text" id="phone" placeholder="Phone" />
+      <input type="email" id="email" placeholder="Email" />
+      <input type="date" id="date_of_birth" placeholder="Date of Birth" />
+      
+      <select id="gender">
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
 
-        <div id="error-message" class="error-message"></div>
-        <div id="success-message" class="success-message"></div>
-    </div>
+      <input type="text" id="id_number" placeholder="ID Number" />
+      <input type="text" id="country" placeholder="Country" />
+      <input type="text" id="county" placeholder="County" />
+      <input type="text" id="city" placeholder="City" />
+      <input type="text" id="postal_code" placeholder="Postal Code" />
 
-    <script>
-        // Fetch clients and programs on page load
-        window.onload = async () => {
-            try {
-                // Fetch clients
-                const clientResponse = await fetch('/api/clients');
-                const clients = await clientResponse.json();
-                const clientSelect = document.getElementById('clientId');
-                
-                clients.forEach(client => {
-                    const option = document.createElement('option');
-                    option.value = client._id;
-                    option.textContent = client.fullName;
-                    clientSelect.appendChild(option);
-                });
+      <button type="submit">Enroll Client</button>
+    </form>
+  </div>
 
-                // Fetch programs
-                const programResponse = await fetch('/api/programs');
-                const programs = await programResponse.json();
-                const programSelect = document.getElementById('programId');
-                
-                programs.forEach(program => {
-                    const option = document.createElement('option');
-                    option.value = program._id;
-                    option.textContent = program.name;
-                    programSelect.appendChild(option);
-                });
+  <script>
+    const enrollPatientForm = document.getElementById('enrollPatientForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const successMessage = document.getElementById('successMessage');
 
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                document.getElementById('error-message').textContent = 'Failed to load clients or programs.';
+    function showMessage(element, message) {
+      element.textContent = message;
+      element.classList.add('show');
+
+      if (window.messageTimeout) {
+        clearTimeout(window.messageTimeout);
+      }
+
+      window.messageTimeout = setTimeout(() => {
+        element.classList.remove('show');
+      }, 5000);
+    }
+
+    enrollPatientForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const programName = document.getElementById('programName').value.trim();
+      const fullName = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const date_of_birth = document.getElementById('date_of_birth').value;
+      const gender = document.getElementById('gender').value;
+      const id_number = document.getElementById('id_number').value.trim();
+      const country = document.getElementById('country').value.trim();
+      const county = document.getElementById('county').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const postal_code = document.getElementById('postal_code').value.trim();
+
+      // Clear any previous messages immediately
+      errorMessage.textContent = '';
+      successMessage.textContent = '';
+
+      if (!programName) {
+        showMessage(errorMessage, 'Program name is required.');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:5000/api/v1/enroll-client-to-program', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            programName,
+            fullName,
+            phone,
+            email,
+            date_of_birth,
+            gender,
+            id_number,
+            physical_address: {
+              country,
+              county,
+              city,
+              postal_code
             }
-        };
-
-        // Handle form submission
-        document.getElementById('enrollPatientForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const clientId = document.getElementById('clientId').value;
-            const programId = document.getElementById('programId').value;
-
-            // Clear previous messages
-            document.getElementById('error-message').textContent = '';
-            document.getElementById('success-message').textContent = '';
-
-            if (!clientId || !programId) {
-                document.getElementById('error-message').textContent = 'Both client and program must be selected.';
-                return;
-            }
-
-            // Send the data to the backend
-            try {
-                const response = await fetch('/api/enroll-client', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ clientId, programId }),
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    document.getElementById('success-message').textContent = result.message;
-                } else {
-                    document.getElementById('error-message').textContent = result.message;
-                }
-            } catch (error) {
-                console.error('Error during client enrollment:', error);
-                document.getElementById('error-message').textContent = 'An error occurred. Please try again later.';
-            }
+          }),
         });
-    </script>
+
+        const result = await response.json();
+
+        if (response.ok) {
+          showMessage(successMessage, result.message || 'Patient enrolled successfully!');
+          enrollPatientForm.reset();
+        } else {
+          showMessage(errorMessage, result.message || 'Failed to enroll patient.');
+        }
+      } catch (error) {
+        console.error('Error during client enrollment:', error);
+        showMessage(errorMessage, 'An error occurred. Please try again later.');
+      }
+    });
+  </script>
 </body>
 </html>

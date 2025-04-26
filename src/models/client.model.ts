@@ -13,6 +13,7 @@ interface Address {
 }
 
 export interface IClient extends Document {
+  _id: Types.ObjectId
   fullName: string;
   date_of_birth: Date;
   gender: Gender;

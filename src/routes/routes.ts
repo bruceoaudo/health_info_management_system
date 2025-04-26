@@ -52,7 +52,7 @@ router.post(
 
 
 router.get(
-  "/get-all-clients",
+  "/clients",
   authenticateToken,
   (req: Request, res: Response) => {
     (async () => {

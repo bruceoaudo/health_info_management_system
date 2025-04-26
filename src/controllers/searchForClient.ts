@@ -1,36 +1,27 @@
-import { Request, Response } from "express";
 import { Client } from "../models/client.model";
+import { Request, Response } from "express";
 
 export const searchForClient = async (req: Request, res: Response) => {
   try {
-    // Extract search query parameters from the request
-    const { name, email } = req.query;
+    const { name } = req.query;
 
-    // Build the query object based on provided parameters
     let query: any = {};
-
     if (name) {
-      query.name = { $regex: name, $options: "i" }; // Case-insensitive search for name
+      query.fullName = { $regex: name, $options: "i" }; // Changed from 'name' to 'fullName'
     }
 
-    if (email) {
-      query.email = { $regex: email, $options: "i" }; // Case-insensitive search for email
-    }
-
-    // Search for clients based on the constructed query
     const clients = await Client.find(query);
 
-    // Check if any clients were found
-    if (clients.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No clients found matching the search criteria" });
-    }
-
-    // Return the found clients
-    return res.status(200).json(clients);
+    // Always return 200 with clients array (even if empty)
+    return res.status(200).json({
+      success: true,
+      clients: clients,
+    });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 };

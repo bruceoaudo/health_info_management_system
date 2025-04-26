@@ -93,7 +93,7 @@
       height: 50px;
       border-radius: 4px;
       font-size: 16px;
-      background-color: #2980b9;
+      background-color: #3498db;
       border: none;
       color: white;
       padding: 0 10px;
@@ -102,7 +102,7 @@
     }
 
     .button-search-area > div > button:hover {
-      opacity: 0.75;
+      background-color: #2980b9;
     }
 
     .button-search-area > form {
@@ -124,6 +124,70 @@
     .all-patients-area {
       margin-top: 200px;
     }
+
+    .patient-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px; 
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.patient-list{
+  list-style: none;
+}
+
+.patient-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.patient-name {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 1.2rem;
+}
+
+.patient-details {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.view-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.view-btn:hover {
+  background-color: #2980b9;
+}
+
+@media (max-width: 600px) {
+  .patient-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .patient-actions {
+    margin-top: 12px;
+    align-self: flex-end;
+  }
+}
 
   </style>
 </head>
@@ -153,8 +217,8 @@
         <div>
           <h2>All Patients</h2>
         </div>
-        <div>
-          List of patients
+        <div id="patients-list-container">
+          <!-- Patients will be loaded here -->
         </div>
       </div>
     </section>
@@ -182,6 +246,86 @@
         document.querySelectorAll('nav li').forEach(i => i.classList.remove('active'));
         this.classList.add('active');
       });
+    });
+
+    // Function to fetch and display patients
+    async function fetchAndDisplayPatients() {
+      try {
+        const response = await fetch('http://localhost:5000/api/v1/clients', {
+          method: 'GET',
+          credentials: 'include'
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch patients');
+        }
+
+        const data = await response.json();
+        const patients = data.clients || [];
+        const container = document.getElementById('patients-list-container');
+
+        if (patients.length === 0) {
+          container.innerHTML = '<p>No patients found.</p>';
+          return;
+        }
+
+        const patientList = document.createElement('ul');
+        patientList.className = 'patient-list';
+
+        patients.forEach(patient => {
+          const listItem = document.createElement('li');
+          listItem.innerHTML = `
+            <div class="patient-card">
+  <div class="patient-info">
+    <h3 class="patient-name">${patient.fullName}</h3>
+    <div class="patient-details">
+      <p><span class="detail-label">ID:</span> ${patient.id_number}</p>
+      <p><span class="detail-label">Phone:</span> ${patient.phone}</p>
+      <p><span class="detail-label">Email:</span> ${patient.email}</p>
+    </div>
+  </div>
+  <div class="patient-actions">
+    <button class="view-btn" onclick="viewPatientDetails('${patient._id}')">View Details</button>
+  </div>
+</div>
+          `;
+          patientList.appendChild(listItem);
+        });
+
+        container.innerHTML = '';
+        container.appendChild(patientList);
+
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+        document.getElementById('patients-list-container').innerHTML = `
+          <p>Error loading patients. Please try again later.</p>
+        `;
+      }
+    }
+
+    // Function to view patient details
+    function viewPatientDetails(patientId) {
+      window.open(`patient-details.html?id=${patientId}`, '_blank');
+    }
+
+    // Fetch patients when page loads
+     window.onload = function() {
+      fetchAndDisplayPatients();
+    };
+
+    // Add search functionality
+    document.querySelector('.button-search-area form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const searchInput = this.querySelector('input');
+        const searchTerm = searchInput.value.trim();
+        
+        if (searchTerm) {
+            // Open search results in a new tab
+            window.open(`search-results.html?query=${encodeURIComponent(searchTerm)}`, '_blank');
+        }
+        
+        // Clear the search input
+        searchInput.value = '';
     });
   </script>
 </body>
