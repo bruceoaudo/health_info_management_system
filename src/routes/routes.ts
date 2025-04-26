@@ -8,6 +8,7 @@ import { getAllClients } from "../controllers/getAllClients";
 import { getClientProfile } from "../controllers/getClientProfile";
 import { searchForClient } from "../controllers/searchForClient";
 import { getAllPrograms } from "../controllers/getAllPrograms";
+import { getClientProfileExternal } from "../controllers/getClientProfileExternal";
 
 const router = Router()
 
@@ -79,6 +80,15 @@ router.get(
   (req: Request, res: Response) => {
     (async () => {
       await getClientProfile(req, res)
+    })();
+  }
+);
+
+router.get(
+  "/external/client-profile/:id",
+  (req: Request, res: Response) => {
+    (async () => {
+      await getClientProfileExternal(req, res);
     })();
   }
 );
