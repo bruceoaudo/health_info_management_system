@@ -7,7 +7,7 @@ const MONGO_URI_DEV = process.env.MONGO_URI_DEV || "";
 const MONGO_URI_PROD = process.env.MONGO_URI_PROD || "";
 
 mongoose
-  .connect(process.env.NODE_ENV == "developement" ? MONGO_URI_DEV : MONGO_URI_PROD)
+  .connect(process.env.NODE_ENV === "development" ? MONGO_URI_DEV : MONGO_URI_PROD)
   .then(async () => {
     console.log("MongoDB connected");
 
