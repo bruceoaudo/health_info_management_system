@@ -2,6 +2,10 @@
 
 A comprehensive system for managing patient health records, programs, and external API integrations.
 
+The prototype demonstration is located in the main folder. Look for a file called PROTOTYPE_DEMONSTRATION.mp4
+
+The powerpoint presentation is also in the main folder. Look for a file called POWERPOINT_PRESENTATION.pptx
+
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
