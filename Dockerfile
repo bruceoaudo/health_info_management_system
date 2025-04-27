@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM alpine:3.21 as builder
+FROM node:20-alpine as builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Run the application
-FROM alpine:3.21
+FROM node:20-alpine
 WORKDIR /app
 
 # Copy only necessary files
