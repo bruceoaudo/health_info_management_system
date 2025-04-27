@@ -2,7 +2,7 @@
 FROM node:20-alpine as builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 COPY . .
 RUN npm run build
 
@@ -14,9 +14,8 @@ WORKDIR /app
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
-# Don't copy .env in Dockerfile - use docker-compose for secrets
 
-RUN npm ci --only=production    # Clean install for production
+RUN npm ci --omit=dev
 
 EXPOSE 5000
-CMD ["node", "dist/server.js"]  # Fixed typo from CMO to CMD
+CMD ["node", "dist/server.js"]
