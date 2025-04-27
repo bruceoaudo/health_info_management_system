@@ -2,9 +2,9 @@
 
 A comprehensive system for managing patient health records, programs, and external API integrations.
 
-The prototype demonstration is located in the main folder. Look for a file called PROTOTYPE_DEMONSTRATION.mp4
+- The prototype demonstration is here: [Prototype demonstration](https://github.com/bruceoaudo/health_info_management_system/PROTOTYPE_DEMONSTRATION.mp4)
 
-The powerpoint presentation is also in the main folder. Look for a file called POWERPOINT_PRESENTATION.pptx
+- The powerpoint presentation is here: [Powerpoint presentation](https://github.com/bruceoaudo/health_info_management_system/POWERPOINT_PRESENTATION.pptx)
 
 ## Table of Contents
 
